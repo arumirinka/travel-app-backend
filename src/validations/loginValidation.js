@@ -8,6 +8,4 @@ const loginValidation = (requestBody) => {
   return schema.validate(requestBody);
 };
 
-
-
 module.exports = loginValidation;

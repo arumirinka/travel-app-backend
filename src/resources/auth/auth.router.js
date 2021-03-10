@@ -33,4 +33,20 @@ router.post('/register',  async (req, res) => {
   }
 });
 
+router.post('/login', async (req, res) => {
+  const {email, password} = req.body;
+  const {error} = loginValidation(req.body);
+
+  if(error) return res.status(400).send(error.details[0].message);
+
+  const userRegistered = await User.findOne({email});
+  if (!userRegistered) return res.status(400).send('There is no such user registered.');
+
+  const validPassword = await bcrypt.compare(password, userRegistered.password);
+  if(!validPassword) return res.status(400).send('Wrong password');
+
+  res.send('Successfully logged in');
+
+});
+
 module.exports = router;

@@ -13,10 +13,6 @@ app.use(express.json());
 
 app.use('/favicon.ico', (req, res) => res.sendStatus(StatusCodes.NO_CONTENT));
 
-
-
-// JWT
-
 const jwt = require('jsonwebtoken');
 
 const posts = [
