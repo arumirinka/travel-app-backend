@@ -11,8 +11,6 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.use('/favicon.ico', (req, res) => res.sendStatus(StatusCodes.NO_CONTENT));
-
 app.use('/countries', countryRouter);
 
 app.use((req, res) => {
