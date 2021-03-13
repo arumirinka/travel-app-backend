@@ -14,8 +14,8 @@ app.use(express.json());
 
 app.use('/favicon.ico', (req, res) => res.sendStatus(StatusCodes.NO_CONTENT));
 
-app.use('/api/user', authRoute);
-app.use('/api/user/account', accountRoute);
+app.use('/user', authRoute);
+app.use('/user/account', accountRoute);
 
 app.use((req, res) => {
   res.status(StatusCodes.NOT_IMPLEMENTED).send(ReasonPhrases.NOT_IMPLEMENTED);

@@ -1,4 +1,10 @@
 const router = require('express').Router();
+const { 
+  SALT_ROUNDS,  
+  REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET,
+  TOKEN_EXPIRATION_TIME
+} = require('../../common/config');
 const User = require('../../models/User');
 const RefreshToken = require('../../models/RefreshToken');
 const registerValidation = require('../../validations/registerValidation');
@@ -21,7 +27,7 @@ router.post('/register',  async (req, res) => {
     return res.status(400).send('Email already exists');
   }
 
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(SALT_ROUNDS);
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = new User({
@@ -47,11 +53,15 @@ router.post('/token', async(req, res) => {
   if(!validToken) {
     return res.sendStatus(403);
   }
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (error, user) => {
     if(error) {
       return res.sendStatus(403);
     }
-    const accessToken = jwt.sign({_id: user._id}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'});
+    const accessToken = jwt.sign(
+      {_id: user._id}, 
+      ACCESS_TOKEN_SECRET, 
+      {expiresIn: TOKEN_EXPIRATION_TIME}
+    );
     res.json({accessToken})
   })
 });
@@ -79,8 +89,15 @@ router.post('/login', async (req, res) => {
     return res.status(400).send('Wrong password');
   }
 
-  const token = jwt.sign({_id: userRegistered._id}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'});
-  const refreshToken = jwt.sign({_id: userRegistered._id}, process.env.REFRESH_TOKEN_SECRET);
+  const token = jwt.sign(
+    {_id: userRegistered._id}, 
+    ACCESS_TOKEN_SECRET, 
+    {expiresIn: TOKEN_EXPIRATION_TIME}
+  );
+  const refreshToken = jwt.sign(
+    {_id: userRegistered._id}, 
+    REFRESH_TOKEN_SECRET
+  );
   const newRefreshToken = new RefreshToken({
     refreshToken
   });
