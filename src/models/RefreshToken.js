@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {
   REFRESH_TOKEN_MIN_LENGTH
-} = require('../common/config').VALIDATION;
+} = require('../common/config');
 
 const refreshTokenSchema = new mongoose.Schema({
   refreshToken: {
