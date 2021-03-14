@@ -18,7 +18,7 @@ router.post('/', [verify, loader.single('avatar')],  async (req, res) => {
       req.file.path, {upload_preset: CLOUDINARY_AVATAR_UPLOAD_PRESET}
       );
     res.send(result);
-    console.log(req.files.image.data)
+    console.log(req.files.image.data);
   }
   catch(error) {
     res.status(400);
