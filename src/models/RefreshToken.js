@@ -11,6 +11,6 @@ const refreshTokenSchema = new mongoose.Schema({
     required: true,
     min: REFRESH_TOKEN_MIN_LENGTH,
   },
-})
+});
 
 module.exports = mongoose.model('RefreshToken', refreshTokenSchema);
