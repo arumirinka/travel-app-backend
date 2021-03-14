@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const {
-
+  VALIDATION:{
     USER_NAME_MIN_LENGTH,
     USER_EMAIL_MIN_LENGTH,
     USER_EMAIL_MAX_LENGTH,
     USER_PASSWORD_MAX_LENGTH,
     USER_PASSWORD_MIN_LENGTH,
-
+  }
 } = require('../common/config');
 
 const userSchema = new mongoose.Schema({
