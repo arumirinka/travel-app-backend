@@ -39,6 +39,7 @@ router.post('/register',  async (req, res) => {
     name: name,
     email: email,
     avatar: USER_AVATAR_EMPTY_PLACEHOLDER,
+    avatarCloudinaryId: USER_AVATAR_EMPTY_PLACEHOLDER,
     password: hashedPassword
   })
   

@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema({
     required: false,
     max: USER_AVATAR_MAX_LENGTH,
   },
+  avatarCloudinaryId: {
+    type: String,
+    required: false,
+    max: USER_AVATAR_MAX_LENGTH,
+  },
   password: {
     type: String,
     required: true,

@@ -8,6 +8,7 @@ const {
   CLOUDINARY: {
     CLOUDINARY_AVATAR_UPLOAD_PRESET,
   }, 
+  USER_AVATAR_EMPTY_PLACEHOLDER,
 } = require('../../common/config');
 const fs = require('fs');
 
@@ -21,13 +22,29 @@ router.post('/', [verify, loader.single('avatar')],  async (req, res) => {
     const userRegistered = await User.findOne({_id: req.user._id})
     
     userRegistered.avatar = result.secure_url;
+    userRegistered.avatarCloudinaryId = result.public_id;
     const savedUser = await userRegistered.save();
-    res.send({avatar: savedUser.avatar});
+    res.send(result);
   }
   catch(error) {
     res.status(400);
   }
   fs.unlinkSync(req.file.path);
+});
+
+router.delete('/', verify, async( req, res) => {
+  try{
+    const userRegistered = await User.findOne({_id: req.user._id})
+    const result = await cloudinary.uploader.destroy(
+      userRegistered.avatarCloudinaryId
+    );
+    userRegistered.avatar = USER_AVATAR_EMPTY_PLACEHOLDER;
+    userRegistered.avatarCloudinaryId = USER_AVATAR_EMPTY_PLACEHOLDER;
+    await userRegistered.save();
+    res.send(result);
+  }catch(error){
+    res.send(error)
+  }
 });
 
 module.exports  = router;
