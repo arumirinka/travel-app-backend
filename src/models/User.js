@@ -5,6 +5,7 @@ const {
     USER_EMAIL_MIN_LENGTH,
     USER_EMAIL_MAX_LENGTH,
     USER_PASSWORD_MAX_LENGTH,
+    USER_AVATAR_MAX_LENGTH,
     USER_PASSWORD_MIN_LENGTH,
   }
 } = require('../common/config');
@@ -20,6 +21,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     max: USER_EMAIL_MAX_LENGTH,
     min: USER_EMAIL_MIN_LENGTH
+  },
+  avatar: {
+    type: String,
+    required: false,
+    max: USER_AVATAR_MAX_LENGTH,
   },
   password: {
     type: String,

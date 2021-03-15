@@ -33,6 +33,7 @@ router.post('/register',  async (req, res) => {
   const user = new User({
     name: name,
     email: email,
+    avatar: '',
     password: hashedPassword
   })
   
