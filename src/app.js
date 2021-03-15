@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { StatusCodes, ReasonPhrases } = require('http-status-codes');
 const countryRouter = require('./resources/countries/country.router');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -16,5 +17,7 @@ app.use('/countries', countryRouter);
 app.use((req, res) => {
   res.status(StatusCodes.NOT_IMPLEMENTED).send(ReasonPhrases.NOT_IMPLEMENTED);
 });
+
+app.use(errorHandler);
 
 module.exports = app;
