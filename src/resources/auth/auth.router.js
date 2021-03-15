@@ -3,7 +3,8 @@ const {
   SALT_ROUNDS,  
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_SECRET,
-  TOKEN_EXPIRATION_TIME
+  TOKEN_EXPIRATION_TIME,
+  USER_AVATAR_EMPTY_PLACEHOLDER,
 } = require('../../common/config');
 const User = require('../../models/User');
 const RefreshToken = require('../../models/RefreshToken');
@@ -23,8 +24,12 @@ router.post('/register',  async (req, res) => {
   }
 
   const emailExistsInDB = await User.findOne({email: req.body.email});
+  const nameExistsInDB = await User.findOne({name: req.body.name});
   if (emailExistsInDB) {
     return res.status(400).send('Email already exists');
+  }
+  if (nameExistsInDB) {
+    return res.status(400).send('Name already exists');
   }
 
   const salt = await bcrypt.genSalt(SALT_ROUNDS);
@@ -33,7 +38,7 @@ router.post('/register',  async (req, res) => {
   const user = new User({
     name: name,
     email: email,
-    avatar: '',
+    avatar: USER_AVATAR_EMPTY_PLACEHOLDER,
     password: hashedPassword
   })
   
