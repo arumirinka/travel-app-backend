@@ -5,16 +5,24 @@ const {
   ACCESS_TOKEN_SECRET,
   TOKEN_EXPIRATION_TIME,
   USER_AVATAR_EMPTY_PLACEHOLDER,
+  CLOUDINARY:{
+    CLOUDINARY_AVATAR_UPLOAD_PRESET
+  },
 } = require('../../common/config');
 const User = require('../../models/User');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const path = require('path');
 const RefreshToken = require('../../models/RefreshToken');
 const registerValidation = require('../../validations/registerValidation');
 const loginValidation = require('../../validations/loginValidation');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
+const loader = multer({dest: path.join(__dirname, 'tmp')});
 
-router.post('/register',  async (req, res) => {
+router.post('/register', loader.single('avatar'),  async (req, res) => {
 
   const {name, email, password} = req.body;
   const {error} = registerValidation(req.body);
@@ -42,10 +50,19 @@ router.post('/register',  async (req, res) => {
     avatarCloudinaryId: USER_AVATAR_EMPTY_PLACEHOLDER,
     password: hashedPassword
   })
-  
+  console.log(req.file)
+  if(req.file) {
+    const result = await cloudinary.uploader.upload(
+      req.file.path, {upload_preset: CLOUDINARY_AVATAR_UPLOAD_PRESET}
+    );
+    user.avatar = result.secure_url;
+    user.avatarCloudinaryId = result.public_id;
+    fs.unlinkSync(req.file.path);
+  }
+
   try{
     const savedUser = await user.save();
-    res.send({user: user._id})
+    res.send({message: 'ok'})
   }catch(error){
     res.status(400).send(error)
   }
@@ -64,12 +81,12 @@ router.post('/token', async(req, res) => {
     if(error) {
       return res.sendStatus(403);
     }
-    const accessToken = jwt.sign(
+    const authToken = jwt.sign(
       {_id: user._id}, 
       ACCESS_TOKEN_SECRET, 
       {expiresIn: TOKEN_EXPIRATION_TIME}
     );
-    res.json({accessToken})
+    res.json({authToken})
   })
 });
 
