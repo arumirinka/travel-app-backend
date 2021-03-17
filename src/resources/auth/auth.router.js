@@ -50,7 +50,7 @@ router.post('/register', loader.single('avatar'),  async (req, res) => {
     avatarCloudinaryId: USER_AVATAR_EMPTY_PLACEHOLDER,
     password: hashedPassword
   })
-  console.log(req.file)
+
   if(req.file) {
     const result = await cloudinary.uploader.upload(
       req.file.path, {upload_preset: CLOUDINARY_AVATAR_UPLOAD_PRESET}
